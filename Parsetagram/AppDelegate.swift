@@ -7,15 +7,30 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        Parse.initializeWithConfiguration(
+            ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+                configuration.applicationId = "Parsetagram"
+                configuration.clientKey = "h0lah0lap@tacOn!"  // set to nil assuming you have not set clientKey
+                configuration.server = "https://nameless-stream-55104.herokuapp.com/parse"
+            })
+        )
+        
+        // check if user is logged in.
+        if PFUser.currentUser() != nil {
+                
+        }
+
+        
         return true
     }
 
