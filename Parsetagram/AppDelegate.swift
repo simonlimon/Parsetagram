@@ -27,7 +27,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // check if user is logged in.
         if PFUser.currentUser() != nil {
-                
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let feedVC = storyboard.instantiateViewControllerWithIdentifier("Feed") as UIViewController
+            window?.rootViewController = feedVC
         }
 
         

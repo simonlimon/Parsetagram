@@ -10,27 +10,55 @@ import UIKit
 import Parse
 
 class Post: NSObject {
-    /**
-     * Other methods
-     */
+    
+    private(set) var media: UIImage!
+    let author: PFUser!
+    let caption: String!
+    var likesCount: Int!
+    var commentsCount: Int!
+    
+    
+    init(image: UIImage?, withCaption caption: String?) {
+        media = image
+        author = PFUser.currentUser()
+        self.caption = caption
+        likesCount = 0
+        commentsCount = 0
+    }
+    
+    init(object: PFObject, with progressBlock: PFProgressBlock?) {
+        author =  object["author"] as! PFUser
+        caption =  object["caption"] as! String
+        likesCount =  object["likesCount"] as! Int
+        commentsCount = object["commentsCount"] as! Int
+        
+        super.init()
+        
+        let mediaFile = object["media"] as! PFFile
+        
+        mediaFile.getDataInBackgroundWithBlock({ (imageData: NSData?, error: NSError?) in
+            if (error == nil) {
+                self.media = UIImage(data:imageData!)
+            } else {
+                self.media = nil
+                print("Error creating image")
+            }
+        }, progressBlock: progressBlock)
+    }
     
     /**
      Method to add a user post to Parse (uploading image file)
-     
-     - parameter image: Image that the user wants upload to parse
-     - parameter caption: Caption text input by the user
-     - parameter completion: Block to be executed after save operation is complete
      */
-    class func postUserImage(image: UIImage?, withCaption caption: String?, withCompletion completion: PFBooleanResultBlock?) {
+    func upload(completion: PFBooleanResultBlock?) {
         // Create Parse object PFObject
         let post = PFObject(className: "Post")
         
         // Add relevant fields to the object
-        post["media"] = getPFFileFromImage(image) // PFFile column type
-        post["author"] = PFUser.currentUser() // Pointer column type that points to PFUser
+        post["media"] = getPFFileFromImage(media) // PFFile column type
+        post["author"] = author // Pointer column type that points to PFUser
         post["caption"] = caption
-        post["likesCount"] = 0
-        post["commentsCount"] = 0
+        post["likesCount"] = likesCount
+        post["commentsCount"] = commentsCount
         
         // Save object (following function will save the object in Parse asynchronously)
         post.saveInBackgroundWithBlock(completion)
@@ -43,7 +71,7 @@ class Post: NSObject {
      
      - returns: PFFile for the the data in the image
      */
-    class func getPFFileFromImage(image: UIImage?) -> PFFile? {
+    func getPFFileFromImage(image: UIImage?) -> PFFile? {
         // check if image is not nil
         if let image = image {
             // get image data and check if that is not nil
@@ -53,5 +81,6 @@ class Post: NSObject {
         }
         return nil
     }
+    
 }
 

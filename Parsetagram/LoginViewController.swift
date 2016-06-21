@@ -25,6 +25,23 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func alert(error: NSError) -> Void {
+        let title = error.localizedDescription.capitalizedString
+        let alertController = UIAlertController(title: title, message: nil, preferredStyle: .Alert)
+        
+        // create an OK action
+        let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+            alertController.dismissViewControllerAnimated(true, completion: nil)
+        }
+        
+        // add the OK action to the alert controller
+        alertController.addAction(OKAction)
+        
+        presentViewController(alertController, animated: true) {
+            // optional code for what happens after the alert controller has finished presenting
+        }
+    }
+    
 
     @IBAction func onSignIn(sender: UIButton) {
         let username = usernameField.text ?? ""
@@ -32,8 +49,7 @@ class LoginViewController: UIViewController {
         
         PFUser.logInWithUsernameInBackground(username, password: password) { (user: PFUser?, error: NSError?) -> Void in
             if let error = error {
-                print("User login failed.")
-                print(error.localizedDescription)
+                self.alert(error)
             } else {
                 print("User logged in successfully")
                 self.performSegueWithIdentifier("loginSegue", sender: nil)
@@ -54,7 +70,7 @@ class LoginViewController: UIViewController {
         // call sign up function on the object
         newUser.signUpInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
             if let error = error {
-                print(error.localizedDescription)
+                self.alert(error)
             } else {
                 print("User Registered successfully")
                 self.performSegueWithIdentifier("loginSegue", sender: nil)
