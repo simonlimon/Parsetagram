@@ -14,6 +14,7 @@ class Post: NSObject {
     private(set) var media: UIImage!
     let author: PFUser!
     let caption: String!
+    let dateCreated: NSDate!
     var likesCount: Int!
     var commentsCount: Int!
     
@@ -21,6 +22,7 @@ class Post: NSObject {
     init(image: UIImage?, withCaption caption: String?) {
         media = image
         author = PFUser.currentUser()
+        dateCreated = NSDate()
         self.caption = caption
         likesCount = 0
         commentsCount = 0
@@ -31,6 +33,7 @@ class Post: NSObject {
         caption =  object["caption"] as! String
         likesCount =  object["likesCount"] as! Int
         commentsCount = object["commentsCount"] as! Int
+        dateCreated = object.createdAt
         
         super.init()
         

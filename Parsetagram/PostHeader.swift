@@ -1,20 +1,22 @@
 //
-//  PostCell.swift
+//  PostHeader.swift
 //  Parsetagram
 //
-//  Created by Simon Posada Fishman on 6/20/16.
+//  Created by Simon Posada Fishman on 6/21/16.
 //  Copyright © 2016 Simon Posada Fishman. All rights reserved.
 //
 
 import UIKit
 
-class PostCell: UITableViewCell {
+class PostHeader: UITableViewCell {
+
     
-    @IBOutlet weak var postImageView: UIImageView!
-    @IBOutlet weak var captionView: UITextView!
+    @IBOutlet weak var authorLabel: UILabel!
+    @IBOutlet weak var dateLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        // Initialization code
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

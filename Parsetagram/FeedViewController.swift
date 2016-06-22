@@ -67,7 +67,9 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.posts.append(Post(object: object){ (progress: Int32) in
                         if (progress == 100) {
                             self.tableView.reloadData()
+                            print("loaded")
                         }
+                        
                     })
                 }
                 
@@ -88,15 +90,27 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         fetchPosts(false)
     }
     
-    internal func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return posts.count
     }
     
-    
+    internal func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+
+    internal func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableCellWithIdentifier("PostHeader") as! PostHeader
+        header.authorLabel.text = posts[section].author.username
+        header.dateLabel.text = posts[section].dateCreated.description
+        
+        return header
+    }
+
     internal func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PostCell", forIndexPath: indexPath) as! PostCell
-        cell.postImageView.image = posts[indexPath.row].media
-        cell.authorLabel.text = posts[indexPath.row].author.username
+        cell.postImageView.image = posts[indexPath.section].media
+        cell.captionView.text = posts[indexPath.section].caption
+        cell.captionView.textAlignment = .Center
         return cell
     }
     

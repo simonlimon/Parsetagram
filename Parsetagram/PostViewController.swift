@@ -7,12 +7,28 @@
 //
 
 import UIKit
+import LiquidLoader
 
 class PostViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
+    @IBOutlet weak var captionField: UITextView!
+    @IBOutlet weak var postImageView: UIImageView!
+    
+    var loader: LiquidLoader?
+    let loaderSize: CGFloat = 80
+    @IBInspectable let loaderColor: UIColor = UIColor.darkGrayColor()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        loader = LiquidLoader(frame: CGRectMake(view.frame.midX - loaderSize/2, view.frame.midY - loaderSize/2, loaderSize, loaderSize), effect: .Circle(UIColor.darkGrayColor()))
+        view.addSubview(loader!)
+        loader!.hide()
+        
+        captionField.layer.cornerRadius = 5
+        captionField.layer.borderColor = UIColor.lightGrayColor().CGColor
+        captionField.layer.borderWidth = 1
+        
         // Do any additional setup after loading the view.
     }
 
@@ -21,7 +37,7 @@ class PostViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func onUpload(sender: AnyObject) {
+    @IBAction func onSelectImage(sender: AnyObject) {
         let vc = UIImagePickerController()
         vc.delegate = self
         vc.allowsEditing = true
@@ -31,21 +47,33 @@ class PostViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     }
     
     
-    func imagePickerController(picker: UIImagePickerController,
-                               didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        // Get the image captured by the UIImagePickerController
-        //        let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
+    @IBAction func onUpload(sender: AnyObject) {
         
-        let post = Post(image: editedImage, withCaption: "test")
+        let post = Post(image: postImageView.image, withCaption: captionField.text)
         
+        self.postImageView.alpha = 0.5
+        loader!.show()
         post.upload() {(success: Bool, error: NSError?) in
             if let error = error {
                 print(error.localizedDescription)
             } else {
                 print("Image uploaded successfully")
             }
+            self.postImageView.image = nil
+            self.captionField.text = ""
+            self.postImageView.alpha = 1
+            self.loader!.hide()
         }
+        
+    }
+    
+    
+    func imagePickerController(picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        // Get the image captured by the UIImagePickerController
+        //        let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
+        postImageView.image = editedImage
         
         // Dismiss UIImagePickerController to go back to your original view controller
         dismissViewControllerAnimated(true, completion: nil)

@@ -155,17 +155,37 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EZc-8m-f39">
-                                <rect key="frame" x="162" y="319" width="50" height="30"/>
+                                <rect key="frame" x="57" y="143" width="89" height="30"/>
+                                <state key="normal" title="Select Image"/>
+                                <connections>
+                                    <action selector="onSelectImage:" destination="as6-qt-RsI" eventType="touchUpInside" id="gdo-Dv-drh"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wko-h1-gsI">
+                                <rect key="frame" x="57" y="201" width="261" height="265"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="UuV-80-rK3">
+                                <rect key="frame" x="67" y="474" width="240" height="84"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vei-M1-Of9">
+                                <rect key="frame" x="268" y="143" width="50" height="30"/>
                                 <state key="normal" title="Upload"/>
                                 <connections>
-                                    <action selector="onUpload:" destination="KaZ-f6-7ow" eventType="touchUpInside" id="Uur-1w-LQc"/>
-                                    <action selector="onUpload:" destination="as6-qt-RsI" eventType="touchUpInside" id="xyD-50-YpX"/>
+                                    <action selector="onUpload:" destination="as6-qt-RsI" eventType="touchUpInside" id="OpW-nB-IZB"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Post" id="phd-xa-Jvd"/>
+                    <connections>
+                        <outlet property="captionField" destination="UuV-80-rK3" id="G1T-DH-DIg"/>
+                        <outlet property="postImageView" destination="wko-h1-gsI" id="oIs-IU-0PR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XbM-cf-XKE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -187,26 +207,53 @@
                                 <rect key="frame" x="20" y="62" width="335" height="518"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PostCell" rowHeight="315" id="hsP-n4-dQV" customClass="PostCell" customModule="Parsetagram" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="335" height="315"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PostHeader" rowHeight="27" id="4CY-C6-9mp" customClass="PostHeader" customModule="Parsetagram" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="335" height="27"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hsP-n4-dQV" id="HUe-dN-q4Q">
-                                            <rect key="frame" x="0.0" y="0.0" width="335" height="314.5"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4CY-C6-9mp" id="ZbF-xD-H1S">
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="26.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SgE-Ad-86N">
-                                                    <rect key="frame" x="0.0" y="46" width="335" height="268.5"/>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="author" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pQI-5R-NuX">
-                                                    <rect key="frame" x="8" y="17" width="319" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="author" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kR2-Lc-B8A">
+                                                    <rect key="frame" x="8" y="4" width="167" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="it3-Bq-naJ">
+                                                    <rect key="frame" x="183" y="3" width="144" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="0.77166445035460995" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="authorLabel" destination="kR2-Lc-B8A" id="y6q-yR-3iv"/>
+                                            <outlet property="dateLabel" destination="it3-Bq-naJ" id="GAm-0h-QIO"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PostCell" rowHeight="345" id="hsP-n4-dQV" customClass="PostCell" customModule="Parsetagram" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="55" width="335" height="345"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hsP-n4-dQV" id="HUe-dN-q4Q">
+                                            <rect key="frame" x="0.0" y="0.0" width="335" height="344.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SgE-Ad-86N">
+                                                    <rect key="frame" x="0.0" y="0.0" width="335" height="276.5"/>
+                                                </imageView>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" text="Caption" textAlignment="center" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e37-fs-Mdt">
+                                                    <rect key="frame" x="8" y="278.5" width="319" height="58"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="authorLabel" destination="pQI-5R-NuX" id="Akm-dH-i4K"/>
+                                            <outlet property="captionView" destination="e37-fs-Mdt" id="NZX-8V-G6C"/>
                                             <outlet property="postImageView" destination="SgE-Ad-86N" id="xA5-Eh-L3o"/>
                                         </connections>
                                     </tableViewCell>
