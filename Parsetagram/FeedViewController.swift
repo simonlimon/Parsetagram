@@ -9,6 +9,7 @@
 import UIKit
 import Parse
 import ParseUI
+import ElasticTransition
 
 class FeedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIScrollViewDelegate {
 
@@ -18,27 +19,43 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var isMoreDataLoading = false
     var loadingMoreView:InfiniteScrollActivityView?
     var skip = 0
+    var transition = ElasticTransition()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let panGR = UIPanGestureRecognizer(target: self, action: #selector(FeedViewController.handlePan(_:)))
+        view.addGestureRecognizer(panGR)
+        
+        transition.edge = .Left
+        transition.sticky = false
         
         tableView.delegate = self
         tableView.dataSource = self
         
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.backgroundColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
         tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Set up Infinite Scroll loading indicator
         let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
         loadingMoreView = InfiniteScrollActivityView(frame: frame)
         loadingMoreView!.hidden = true
+        loadingMoreView!.backgroundColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
         tableView.addSubview(loadingMoreView!)
         
         var insets = tableView.contentInset;
         insets.bottom += InfiniteScrollActivityView.defaultHeight;
         tableView.contentInset = insets
         
+        
         fetchPosts(false)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        navigationController!.navigationBar.barTintColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
+        tabBarController!.tabBar.barTintColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
     }
 
     override func didReceiveMemoryWarning() {
@@ -119,12 +136,17 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableView.dequeueReusableCellWithIdentifier("PostCell", forIndexPath: indexPath) as! PostCell
         cell.postImageView.image = posts[indexPath.section].media
         cell.captionView.text = posts[indexPath.section].caption
+        cell.captionView.textColor = UIColor.whiteColor()
         cell.captionView.textAlignment = .Center
         cell.likesLabel.text = String(posts[indexPath.section].likesCount!)
         cell.post = posts[indexPath.section]
         return cell
     }
     
+    internal func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+        
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         if (!isMoreDataLoading) {
@@ -144,6 +166,17 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                 // Code to load more results
                 fetchPosts(true)
             }
+        }
+    }
+    
+    func handlePan(pan:UIPanGestureRecognizer){
+        if pan.state == .Began{
+            // Here, you can do one of two things
+            // 1. show a viewcontroller directly
+            let nextViewController = tabBarController!.viewControllers![1]
+                transition.startInteractiveTransition(self, toViewController: nextViewController, gestureRecognizer: pan)
+        }else{
+            transition.updateInteractiveTransition(gestureRecognizer: pan)
         }
     }
     

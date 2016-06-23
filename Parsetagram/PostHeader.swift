@@ -20,7 +20,10 @@ class PostHeader: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        profilePic.layer.cornerRadius = 13
+        profilePic.layer.borderWidth = 1
+        profilePic.layer.borderColor = UIColor.lightGrayColor().CGColor
+        self.profilePic.clipsToBounds = true
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
