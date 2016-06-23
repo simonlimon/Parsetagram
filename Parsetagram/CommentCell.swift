@@ -1,23 +1,16 @@
 //
-//  PostHeader.swift
+//  CommentCell.swift
 //  Parsetagram
 //
-//  Created by Simon Posada Fishman on 6/21/16.
+//  Created by Simon Posada Fishman on 6/22/16.
 //  Copyright © 2016 Simon Posada Fishman. All rights reserved.
 //
 
 import UIKit
-import ParseUI
 
-class PostHeader: UITableViewCell {
+class CommentCell: UITableViewCell {
 
-    
-    @IBOutlet weak var authorLabel: UILabel!
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var profilePic: PFImageView!
-    
-    var author: User? = nil
-    
+    @IBOutlet weak var commentLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

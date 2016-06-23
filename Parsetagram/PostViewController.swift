@@ -49,20 +49,36 @@ class PostViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     
     @IBAction func onUpload(sender: AnyObject) {
         
-        let post = Post(image: postImageView.image, withCaption: captionField.text)
-        
-        self.postImageView.alpha = 0.5
-        loader!.show()
-        post.upload() {(success: Bool, error: NSError?) in
-            if let error = error {
-                print(error.localizedDescription)
-            } else {
-                print("Image uploaded successfully")
+        if let image = postImageView.image {
+            let post = Post(image: image, withCaption: captionField.text)
+            
+            self.postImageView.alpha = 0.5
+            loader!.show()
+            post.upload() {(success: Bool, error: NSError?) in
+                if let error = error {
+                    print(error.localizedDescription)
+                } else {
+                    print("Image uploaded successfully")
+                }
+                self.postImageView.image = nil
+                self.captionField.text = ""
+                self.postImageView.alpha = 1
+                self.loader!.hide()
             }
-            self.postImageView.image = nil
-            self.captionField.text = ""
-            self.postImageView.alpha = 1
-            self.loader!.hide()
+        } else {
+            let alertController = UIAlertController(title: "An image is required", message: nil, preferredStyle: .Alert)
+            
+            // create an OK action
+            let OKAction = UIAlertAction(title: "OK", style: .Default) { (action) in
+                alertController.dismissViewControllerAnimated(true, completion: nil)
+            }
+            
+            // add the OK action to the alert controller
+            alertController.addAction(OKAction)
+            
+            presentViewController(alertController, animated: true) {
+                // optional code for what happens after the alert controller has finished presenting
+            }
         }
         
     }

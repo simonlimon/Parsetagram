@@ -21,6 +21,10 @@
 		E758E8361D18B9FD006F3AB6 /* PostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E758E8351D18B9FD006F3AB6 /* PostCell.swift */; };
 		E76777381D19E86D00753131 /* InfiniteScrollActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76777371D19E86D00753131 /* InfiniteScrollActivityView.swift */; };
 		E7D774981D19F9DC000E5C71 /* PostHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D774971D19F9DC000E5C71 /* PostHeader.swift */; };
+		E7D7749A1D1A2944000E5C71 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D774991D1A2944000E5C71 /* DetailsViewController.swift */; };
+		E7D7749C1D1B1861000E5C71 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D7749B1D1B1861000E5C71 /* User.swift */; };
+		E7D7749E1D1BAF7D000E5C71 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D7749D1D1BAF7D000E5C71 /* CommentCell.swift */; };
+		E7D774A01D1BB310000E5C71 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D7749F1D1BB310000E5C71 /* Comment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +46,10 @@
 		E758E8351D18B9FD006F3AB6 /* PostCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCell.swift; sourceTree = "<group>"; };
 		E76777371D19E86D00753131 /* InfiniteScrollActivityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteScrollActivityView.swift; sourceTree = "<group>"; };
 		E7D774971D19F9DC000E5C71 /* PostHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostHeader.swift; sourceTree = "<group>"; };
+		E7D774991D1A2944000E5C71 /* DetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		E7D7749B1D1B1861000E5C71 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		E7D7749D1D1BAF7D000E5C71 /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		E7D7749F1D1BB310000E5C71 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +121,7 @@
 				E758E82F1D189F64006F3AB6 /* FeedViewController.swift */,
 				E73BE44D1D19D6B80061FAC9 /* PostViewController.swift */,
 				E73BE44B1D19D6A50061FAC9 /* UserViewController.swift */,
+				E7D774991D1A2944000E5C71 /* DetailsViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -121,6 +130,8 @@
 			isa = PBXGroup;
 			children = (
 				E758E8311D18A21D006F3AB6 /* Post.swift */,
+				E7D7749B1D1B1861000E5C71 /* User.swift */,
+				E7D7749F1D1BB310000E5C71 /* Comment.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -132,6 +143,7 @@
 				E73BE4511D19DA620061FAC9 /* UserPostCell.swift */,
 				E76777371D19E86D00753131 /* InfiniteScrollActivityView.swift */,
 				E7D774971D19F9DC000E5C71 /* PostHeader.swift */,
+				E7D7749D1D1BAF7D000E5C71 /* CommentCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -259,13 +271,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7D7749E1D1BAF7D000E5C71 /* CommentCell.swift in Sources */,
 				E76777381D19E86D00753131 /* InfiniteScrollActivityView.swift in Sources */,
 				E758E82E1D1895AC006F3AB6 /* LoginViewController.swift in Sources */,
+				E7D774A01D1BB310000E5C71 /* Comment.swift in Sources */,
 				E73BE44C1D19D6A50061FAC9 /* UserViewController.swift in Sources */,
+				E7D7749A1D1A2944000E5C71 /* DetailsViewController.swift in Sources */,
 				E73BE4521D19DA620061FAC9 /* UserPostCell.swift in Sources */,
 				E7D774981D19F9DC000E5C71 /* PostHeader.swift in Sources */,
 				E73BE44E1D19D6B80061FAC9 /* PostViewController.swift in Sources */,
 				E758E8301D189F64006F3AB6 /* FeedViewController.swift in Sources */,
+				E7D7749C1D1B1861000E5C71 /* User.swift in Sources */,
 				E758E81C1D18921F006F3AB6 /* AppDelegate.swift in Sources */,
 				E758E8321D18A21D006F3AB6 /* Post.swift in Sources */,
 				E758E8361D18B9FD006F3AB6 /* PostCell.swift in Sources */,

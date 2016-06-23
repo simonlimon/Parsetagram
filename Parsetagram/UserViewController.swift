@@ -8,13 +8,15 @@
 
 import UIKit
 import Parse
+import ParseUI
 
-class UserViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class UserViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var profilePicView: PFImageView!
     
-    var user: PFUser? = nil
+    var user: User? = nil
     var userPosts: [Post] = []
 
     override func viewDidLoad() {
@@ -23,29 +25,22 @@ class UserViewController: UIViewController, UICollectionViewDelegate, UICollecti
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        user = PFUser.currentUser()
+        if (user == nil) {
+            user = User(user: PFUser.currentUser()!)
+        }
+
     }
     
     override func viewWillAppear(animated: Bool) {
+        fetchPosts()
+        
         usernameLabel.text = user?.username
-        fetchUserPosts()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        profilePicView.file = user?.profilePicFile
+        profilePicView.loadInBackground()
     }
     
-    func fetchUserPosts() -> Void {
-        // construct PFQuery
-        let query = PFQuery(className: "Post")
-        query.whereKey("author", equalTo: user!)
-        query.orderByDescending("createdAt")
-        query.includeKey("author")
-        query.limit = 20
-        
-        // fetch data asynchronously
-        query.findObjectsInBackgroundWithBlock { (objects: [PFObject]?, error: NSError?) -> Void in
+    func fetchPosts() {
+        user!.fetchUserPosts() { (objects: [PFObject]?, error: NSError?) -> Void in
             if let objects = objects {
                 self.userPosts = []
                 for object in objects {
@@ -53,13 +48,18 @@ class UserViewController: UIViewController, UICollectionViewDelegate, UICollecti
                         if (progress == 100) {
                             self.collectionView.reloadData()
                         }
-                    })
+                        })
                 }
                 self.collectionView.reloadData()
             } else {
                 print("Error fetching posts")
             }
         }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -85,7 +85,29 @@ class UserViewController: UIViewController, UICollectionViewDelegate, UICollecti
             
         }
     }
+    
+    func imagePickerController(picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        // Get the image captured by the UIImagePickerController
+        //        let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+        let editedImage = info[UIImagePickerControllerEditedImage] as! UIImage
+        user?.updateProfilePic(editedImage)
+        profilePicView.image = editedImage
+        
+        // Dismiss UIImagePickerController to go back to your original view controller
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 
+    @IBAction func onChangeProfilePic(sender: AnyObject) {
+        let vc = UIImagePickerController()
+        vc.delegate = self
+        vc.allowsEditing = true
+        vc.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        
+        self.presentViewController(vc, animated: true, completion: nil)
+    }
+    
     /*
     // MARK: - Navigation
 

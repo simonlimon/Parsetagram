@@ -12,31 +12,37 @@ import Parse
 class Post: NSObject {
     
     private(set) var media: UIImage!
-    let author: PFUser!
+    private var object: PFObject?
+    let author: User!
     let caption: String!
     let dateCreated: NSDate!
-    var likesCount: Int!
+    var comments: [Comment]!
+    
+    private(set) var likesCount: Int!
+    
     var commentsCount: Int!
     
-    
-    init(image: UIImage?, withCaption caption: String?) {
+    init(image: UIImage, withCaption caption: String?) {
         media = image
-        author = PFUser.currentUser()
+        author = User(user: PFUser.currentUser()!)
         dateCreated = NSDate()
         self.caption = caption
         likesCount = 0
         commentsCount = 0
+        comments = []
     }
     
     init(object: PFObject, with progressBlock: PFProgressBlock?) {
-        author =  object["author"] as! PFUser
+        self.object = object
+        author =  User(user: object["author"] as! PFUser)
         caption =  object["caption"] as! String
         likesCount =  object["likesCount"] as! Int
         commentsCount = object["commentsCount"] as! Int
         dateCreated = object.createdAt
+        comments = []
         
         super.init()
-        
+        fetchComments()
         let mediaFile = object["media"] as! PFFile
         
         mediaFile.getDataInBackgroundWithBlock({ (imageData: NSData?, error: NSError?) in
@@ -49,22 +55,53 @@ class Post: NSObject {
         }, progressBlock: progressBlock)
     }
     
+    func fetchComments() -> Void {
+        // construct PFQuery
+        let query = PFQuery(className: "Comment")
+        query.whereKey("postID", equalTo: object!.objectId!)
+        query.orderByAscending("createdAt")
+        
+        // fetch data asynchronously
+        query.findObjectsInBackgroundWithBlock { (objects: [PFObject]?, error: NSError?) -> Void in
+            if let objects = objects {
+                for object in objects {
+                    self.comments.append(Comment(object: object))
+                }
+            } else {
+                print("Error fetching comments")
+            }
+        }
+    }
+    
+    
+    func increaseLikeCount() {
+        likesCount! += 1
+        object!["likesCount"] = likesCount
+        object!.saveEventually()
+    }
+    
+    func addComment(comment: String) {
+        commentsCount! += 1
+        object!.saveEventually()
+        comments.append(Comment(text: comment, author: author.username!, postID: object!.objectId!))
+        comments.last!.getPFObject().saveInBackground()
+    }
+    
     /**
      Method to add a user post to Parse (uploading image file)
      */
     func upload(completion: PFBooleanResultBlock?) {
         // Create Parse object PFObject
-        let post = PFObject(className: "Post")
+        object = PFObject(className: "Post")
         
         // Add relevant fields to the object
-        post["media"] = getPFFileFromImage(media) // PFFile column type
-        post["author"] = author // Pointer column type that points to PFUser
-        post["caption"] = caption
-        post["likesCount"] = likesCount
-        post["commentsCount"] = commentsCount
-        
+        object!["media"] = Post.getPFFileFromImage(media)
+        object!["author"] = author.user // Pointer column type that points to PFUser
+        object!["caption"] = caption
+        object!["likesCount"] = likesCount
+        object!["commentsCount"] = commentsCount
         // Save object (following function will save the object in Parse asynchronously)
-        post.saveInBackgroundWithBlock(completion)
+        object!.saveInBackgroundWithBlock(completion)
     }
     
     /**
@@ -74,7 +111,7 @@ class Post: NSObject {
      
      - returns: PFFile for the the data in the image
      */
-    func getPFFileFromImage(image: UIImage?) -> PFFile? {
+    class func getPFFileFromImage(image: UIImage?) -> PFFile? {
         // check if image is not nil
         if let image = image {
             // get image data and check if that is not nil

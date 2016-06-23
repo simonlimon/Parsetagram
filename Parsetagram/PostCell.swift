@@ -12,6 +12,8 @@ class PostCell: UITableViewCell {
     
     @IBOutlet weak var postImageView: UIImageView!
     @IBOutlet weak var captionView: UITextView!
+    @IBOutlet weak var likesLabel: UILabel!
+    var post: Post? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -23,4 +25,8 @@ class PostCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    @IBAction func onLike(sender: AnyObject) {
+        post!.increaseLikeCount()
+        likesLabel.text = String(Int(likesLabel.text!)! + 1)
+    }
 }

@@ -17,7 +17,7 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     let refreshControl = UIRefreshControl()
     var isMoreDataLoading = false
     var loadingMoreView:InfiniteScrollActivityView?
-
+    var skip = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,8 +55,10 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
 
         if !append {
             self.posts = []
+            skip = 0
         } else {
-            query.skip = 5
+            skip += 5
+            query.skip = skip
         }
         
         // fetch data asynchronously
@@ -67,7 +69,6 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
                     self.posts.append(Post(object: object){ (progress: Int32) in
                         if (progress == 100) {
                             self.tableView.reloadData()
-                            print("loaded")
                         }
                         
                     })
@@ -102,6 +103,14 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         let header = tableView.dequeueReusableCellWithIdentifier("PostHeader") as! PostHeader
         header.authorLabel.text = posts[section].author.username
         header.dateLabel.text = posts[section].dateCreated.description
+        header.author = posts[section].author
+        
+        if let profilePic = posts[section].author.profilePic {
+            header.profilePic.image = profilePic
+        } else {
+            header.profilePic.file = posts[section].author.profilePicFile
+            header.profilePic.loadInBackground()
+        }
         
         return header
     }
@@ -111,6 +120,8 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         cell.postImageView.image = posts[indexPath.section].media
         cell.captionView.text = posts[indexPath.section].caption
         cell.captionView.textAlignment = .Center
+        cell.likesLabel.text = String(posts[indexPath.section].likesCount!)
+        cell.post = posts[indexPath.section]
         return cell
     }
     
@@ -136,14 +147,26 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if let button = sender as? UIButton {
+            if (button.restorationIdentifier! == "userButton") {
+                if let userView = segue.destinationViewController as? UserViewController {
+                    let postHeader = button.superview?.superview as! PostHeader
+                    userView.user = postHeader.author
+                }
+            }
+        } else {
+            if let detailsView = segue.destinationViewController as? DetailsViewController {
+                let postCell = sender as! PostCell
+                detailsView.post = postCell.post
+            }
+        }
     }
-    */
 
 }
