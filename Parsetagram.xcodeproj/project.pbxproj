@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E6E9F480479BF6122FE6B8E4 /* Pods_Parsetagram.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D4C02568092A14CCE9A32B /* Pods_Parsetagram.framework */; };
+		E7254CD31D1E1DD1006A9840 /* OtherUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7254CD21D1E1DD1006A9840 /* OtherUserViewController.swift */; };
 		E73BE44C1D19D6A50061FAC9 /* UserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73BE44B1D19D6A50061FAC9 /* UserViewController.swift */; };
 		E73BE44E1D19D6B80061FAC9 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73BE44D1D19D6B80061FAC9 /* PostViewController.swift */; };
 		E73BE4521D19DA620061FAC9 /* UserPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73BE4511D19DA620061FAC9 /* UserPostCell.swift */; };
@@ -31,6 +32,7 @@
 		2F3FF5431C0C8AF29D7F44F4 /* Pods-Parsetagram.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Parsetagram.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Parsetagram/Pods-Parsetagram.debug.xcconfig"; sourceTree = "<group>"; };
 		89D4C02568092A14CCE9A32B /* Pods_Parsetagram.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Parsetagram.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E195777F643ABA33010B15BB /* Pods-Parsetagram.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Parsetagram.release.xcconfig"; path = "Pods/Target Support Files/Pods-Parsetagram/Pods-Parsetagram.release.xcconfig"; sourceTree = "<group>"; };
+		E7254CD21D1E1DD1006A9840 /* OtherUserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherUserViewController.swift; sourceTree = "<group>"; };
 		E73BE44B1D19D6A50061FAC9 /* UserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewController.swift; sourceTree = "<group>"; };
 		E73BE44D1D19D6B80061FAC9 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		E73BE4511D19DA620061FAC9 /* UserPostCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserPostCell.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				E73BE44D1D19D6B80061FAC9 /* PostViewController.swift */,
 				E73BE44B1D19D6A50061FAC9 /* UserViewController.swift */,
 				E7D774991D1A2944000E5C71 /* DetailsViewController.swift */,
+				E7254CD21D1E1DD1006A9840 /* OtherUserViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7D7749E1D1BAF7D000E5C71 /* CommentCell.swift in Sources */,
+				E7254CD31D1E1DD1006A9840 /* OtherUserViewController.swift in Sources */,
 				E76777381D19E86D00753131 /* InfiniteScrollActivityView.swift in Sources */,
 				E758E82E1D1895AC006F3AB6 /* LoginViewController.swift in Sources */,
 				E7D774A01D1BB310000E5C71 /* Comment.swift in Sources */,

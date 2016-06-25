@@ -19,30 +19,39 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     var isMoreDataLoading = false
     var loadingMoreView:InfiniteScrollActivityView?
     var skip = 0
+    
     var transition = ElasticTransition()
+    let lgr = UIScreenEdgePanGestureRecognizer()
+    let rgr = UIScreenEdgePanGestureRecognizer()
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let panGR = UIPanGestureRecognizer(target: self, action: #selector(FeedViewController.handlePan(_:)))
-        view.addGestureRecognizer(panGR)
+        transition.sticky = true
+        transition.showShadow = true
+        transition.panThreshold = 0.3
+        transition.transformType = .TranslateMid
         
-        transition.edge = .Left
-        transition.sticky = false
+        lgr.addTarget(self, action: #selector(FeedViewController.handlePan(_:)))
+        rgr.addTarget(self, action: #selector(FeedViewController.handleRightPan(_:)))
+        lgr.edges = .Left
+        rgr.edges = .Right
+        view.addGestureRecognizer(lgr)
+        view.addGestureRecognizer(rgr)
         
         tableView.delegate = self
         tableView.dataSource = self
         
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), forControlEvents: UIControlEvents.ValueChanged)
-        refreshControl.backgroundColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
+        refreshControl.backgroundColor = UIColor(red:43/255, green:158/255, blue:179/255, alpha:1.0)
         tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Set up Infinite Scroll loading indicator
         let frame = CGRectMake(0, tableView.contentSize.height, tableView.bounds.size.width, InfiniteScrollActivityView.defaultHeight)
         loadingMoreView = InfiniteScrollActivityView(frame: frame)
         loadingMoreView!.hidden = true
-        loadingMoreView!.backgroundColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
+//        loadingMoreView!.backgroundColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
         tableView.addSubview(loadingMoreView!)
         
         var insets = tableView.contentInset;
@@ -54,8 +63,8 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     override func viewWillAppear(animated: Bool) {
-        navigationController!.navigationBar.barTintColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
-        tabBarController!.tabBar.barTintColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
+//        navigationController?.navigationBar.barTintColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
+//        tabBarController!.tabBar.barTintColor = UIColor(red:0.35, green:0.80, blue:0.56, alpha:1.0)
     }
 
     override func didReceiveMemoryWarning() {
@@ -171,35 +180,59 @@ class FeedViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func handlePan(pan:UIPanGestureRecognizer){
         if pan.state == .Began{
-            // Here, you can do one of two things
-            // 1. show a viewcontroller directly
-            let nextViewController = tabBarController!.viewControllers![1]
-                transition.startInteractiveTransition(self, toViewController: nextViewController, gestureRecognizer: pan)
+            transition.edge = .Left
+            transition.startInteractiveTransition(self, segueIdentifier: "userSegue", gestureRecognizer: pan)
         }else{
             transition.updateInteractiveTransition(gestureRecognizer: pan)
         }
     }
     
+    func handleRightPan(pan:UIPanGestureRecognizer){
+        if pan.state == .Began{
+            transition.edge = .Right
+            transition.startInteractiveTransition(self, segueIdentifier: "postSegue", gestureRecognizer: pan)
+        }else{
+            transition.updateInteractiveTransition(gestureRecognizer: pan)
+        }
+    }
     
+    @IBAction func onImageTap(sender: AnyObject) {
+        transition.edge = .Bottom
+        transition.startingPoint = sender.center
+        performSegueWithIdentifier("detailsSegue", sender: sender)
+    }
+    
+    @IBAction func onUserTap(sender: AnyObject) {
+        transition.edge = .Right
+        transition.startingPoint = sender.center
+        performSegueWithIdentifier("otherUserSegue", sender: sender)
+    }
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        let vc = segue.destinationViewController
+        vc.transitioningDelegate = transition
+        vc.modalPresentationStyle = .Custom
+        
         if let button = sender as? UIButton {
+            print(button.restorationIdentifier!)
+
             if (button.restorationIdentifier! == "userButton") {
-                if let userView = segue.destinationViewController as? UserViewController {
+                if let userView = segue.destinationViewController as? OtherUserViewController {
                     let postHeader = button.superview?.superview as! PostHeader
                     userView.user = postHeader.author
                 }
-            }
-        } else {
-            if let detailsView = segue.destinationViewController as? DetailsViewController {
-                let postCell = sender as! PostCell
-                detailsView.post = postCell.post
-            }
+            } else if (button.restorationIdentifier! == "detailsButton") {
+                if let detailsView = segue.destinationViewController as? DetailsViewController {
+                    let postCell = button.superview?.superview as! PostCell
+                    detailsView.post = postCell.post
+                }
+            } 
         }
     }
+    
 
 }

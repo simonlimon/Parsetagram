@@ -10,6 +10,7 @@ import UIKit
 
 class PostCell: UITableViewCell {
     
+    @IBOutlet weak var infoView: UIView!
     @IBOutlet weak var postImageView: UIImageView!
     @IBOutlet weak var captionView: UITextView!
     @IBOutlet weak var likesLabel: UILabel!
@@ -17,6 +18,7 @@ class PostCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        infoView.layer.cornerRadius = 7
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

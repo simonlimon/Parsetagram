@@ -59,7 +59,7 @@ class Post: NSObject {
         // construct PFQuery
         let query = PFQuery(className: "Comment")
         query.whereKey("postID", equalTo: object!.objectId!)
-        query.orderByAscending("createdAt")
+        query.orderByDescending("createdAt")
         
         // fetch data asynchronously
         query.findObjectsInBackgroundWithBlock { (objects: [PFObject]?, error: NSError?) -> Void in
@@ -83,8 +83,8 @@ class Post: NSObject {
     func addComment(comment: String) {
         commentsCount! += 1
         object!.saveEventually()
-        comments.append(Comment(text: comment, author: author.username!, postID: object!.objectId!))
-        comments.last!.getPFObject().saveInBackground()
+        comments.insert(Comment(text: comment, author: author.username!, postID: object!.objectId!), atIndex: 0)
+        comments.first!.getPFObject().saveInBackground()
     }
     
     /**

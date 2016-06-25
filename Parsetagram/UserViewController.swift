@@ -9,34 +9,78 @@
 import UIKit
 import Parse
 import ParseUI
+import ElasticTransition
+import Hexacon
 
-class UserViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class UserViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, HexagonalViewDataSource {
     
+    @IBOutlet weak var logoutButton: UIButton!
     @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var profilePicView: PFImageView!
     
     var user: User? = nil
     var userPosts: [Post] = []
-
+    
+    private lazy var hexagonalView: HexagonalView = { [unowned self] in
+        var frame = self.view.frame.insetBy(dx: 20, dy: 40)
+        frame.offsetInPlace(dx: 0, dy: 60)
+        let view = HexagonalView(frame: frame)
+        view.hexagonalDataSource = self
+//        view.hexagonalDelegate = self
+        
+        view.itemAppearance = HexagonalItemViewAppearance(needToConfigureItem: true,
+                                                          itemSize: 80,
+                                                          itemSpacing: 10,
+                                                          itemBorderWidth: 0,
+                                                          itemBorderColor: UIColor.grayColor(),
+                                                          animationType: .Circle,
+                                                          animationDuration: 0.05)
+        return view
+    }()
+    
+    var transition = ElasticTransition()
+    let lgr = UIScreenEdgePanGestureRecognizer()
+    let rgr = UIScreenEdgePanGestureRecognizer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        logoutButton.layer.cornerRadius = 10
         
-        if (user == nil) {
-            user = User(user: PFUser.currentUser()!)
-        }
+        transition.sticky = true
+        transition.showShadow = true
+        transition.panThreshold = 0.3
+        transition.transformType = .TranslateMid
+        
+        profilePicView.layer.cornerRadius = 50
+        profilePicView.layer.borderWidth = 1
+        profilePicView.layer.borderColor = UIColor.lightGrayColor().CGColor
+        profilePicView.clipsToBounds = true
+        
+        lgr.addTarget(self, action: #selector(UserViewController.handlePan(_:)))
+        rgr.addTarget(self, action: #selector(UserViewController.handleRightPan(_:)))
+        lgr.edges = .Left
+        rgr.edges = .Right
+        view.addGestureRecognizer(lgr)
+        view.addGestureRecognizer(rgr)
+        
+        user = User(user: PFUser.currentUser()!)
+        fetchPosts()
 
+        hexagonalView.hexagonalDataSource = self
+        
+        view.addSubview(hexagonalView)
+
+        view.sendSubviewToBack(hexagonalView)
     }
     
     override func viewWillAppear(animated: Bool) {
-        fetchPosts()
         
         usernameLabel.text = user?.username
         profilePicView.file = user?.profilePicFile
         profilePicView.loadInBackground()
+//        fetchPosts()
+
     }
     
     func fetchPosts() {
@@ -46,11 +90,13 @@ class UserViewController: UIViewController, UICollectionViewDelegate, UICollecti
                 for object in objects {
                     self.userPosts.append(Post(object: object){ (progress: Int32) in
                         if (progress == 100) {
-                            self.collectionView.reloadData()
+                            self.hexagonalView.reloadData()
+                            self.hexagonalView.reloadInputViews()
                         }
                         })
                 }
-                self.collectionView.reloadData()
+                self.hexagonalView.reloadData()
+
             } else {
                 print("Error fetching posts")
             }
@@ -62,16 +108,12 @@ class UserViewController: UIViewController, UICollectionViewDelegate, UICollecti
         // Dispose of any resources that can be recreated.
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return userPosts.count
+    func numberOfItemInHexagonalView(hexagonalView: HexagonalView) -> Int {
+        return userPosts.count - 1
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("UserPostCell", forIndexPath: indexPath) as! UserPostCell
-        
-        cell.postImageView.image = userPosts[indexPath.row].media
-        
-        return cell
+    func hexagonalView(hexagonalView: HexagonalView, imageForIndex index: Int) -> UIImage? {
+        return userPosts[index].media ?? UIImage.init()
     }
     
     @IBAction func onLogout(sender: AnyObject) {
@@ -80,9 +122,9 @@ class UserViewController: UIViewController, UICollectionViewDelegate, UICollecti
                 print(error.localizedDescription)
             } else {
                 print("User logged out succesfully")
+                self.transition.edge = .Top
                 self.performSegueWithIdentifier("logoutSegue", sender: nil)
             }
-            
         }
     }
     
@@ -108,14 +150,33 @@ class UserViewController: UIViewController, UICollectionViewDelegate, UICollecti
         self.presentViewController(vc, animated: true, completion: nil)
     }
     
-    /*
+    func handlePan(pan:UIPanGestureRecognizer){
+        if pan.state == .Began{
+            transition.edge = .Left
+            transition.startInteractiveTransition(self, segueIdentifier: "postSegue", gestureRecognizer: pan)
+        }else{
+            transition.updateInteractiveTransition(gestureRecognizer: pan)
+        }
+    }
+    
+    func handleRightPan(pan:UIPanGestureRecognizer){
+        if pan.state == .Began{
+            transition.edge = .Right
+            transition.startInteractiveTransition(self, segueIdentifier: "feedSegue", gestureRecognizer: pan)
+        }else{
+            transition.updateInteractiveTransition(gestureRecognizer: pan)
+        }
+    }
+    
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        let vc = segue.destinationViewController
+        vc.transitioningDelegate = transition
+        vc.modalPresentationStyle = .Custom
     }
-    */
+    
 
 }
