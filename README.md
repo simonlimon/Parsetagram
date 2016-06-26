@@ -2,7 +2,7 @@
 
 **Parsetagram** is a photo sharing app using Parse as its backend.
 
-Time spent: **X** hours spent in total
+Time spent: **30** hours spent in total
 
 ## User Stories
 
@@ -34,19 +34,21 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 - [x] Images are downloaded in a bulk, so it is not necessary to re-download every time a cell is rendered, saving data usage. (Like in the original Instagram)
-- [ ] Custom animations for navigating through views
-- [ ] 
+- [x] Custom animations for navigating through views
+- [x] Lots of UI customization and polish
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. Proper navigation using modals, I noticed that old views kept stacking up in my RAM as I used modal transitions.
+2. Push notifications - how to.
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+.gifs were not working (probably they were too long), so I uploaded a video to youtube: https://youtu.be/B_M15vaXlks
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -55,11 +57,13 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 List an 3rd party libraries, icons, graphics, or other assets you used in your app.
 
 - [AFNetworking](https://github.com/AFNetworking/AFNetworking) - networking task library
+- [ElasticTransition](https://github.com/lkzhao/ElasticTransition) - cool animations
+- [Hexacon](https://github.com/gautier-gdx/Hexacon) - apple watch style collection view
 
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+I struggled a lot getting the modal transitions to work properly, I learned that going away completely from push ones is not a great thing.
 
 ## License
 
