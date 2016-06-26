@@ -83,7 +83,7 @@ class Post: NSObject {
     func addComment(comment: String) {
         commentsCount! += 1
         object!.saveEventually()
-        comments.insert(Comment(text: comment, author: author.username!, postID: object!.objectId!), atIndex: 0)
+        comments.insert(Comment(text: comment, author: PFUser.currentUser()!.username!, postID: object!.objectId!), atIndex: 0)
         comments.first!.getPFObject().saveInBackground()
     }
     
